@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMss - Online Grocery Store</title>
+    <link rel="icon" href="https://murugansuperstore.github.io/murugansuperstore.io/image/logo%20for%20MSS.jpg" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff5722;
+            --secondary-color: #ff9800;
+            --accent-color: #4CAF50; /* Slightly adjusted green */
+            --background-color: #e0f7fa; /* Lighter, more vibrant background */
+            --card-background: #fff;
+            --text-color: #222;
+            --green-price: #27ae60;
+            --red-remove: #e91e63;
+            --gradient-start: #ff6b6b; /* Vibrant gradient start */
+            --gradient-end: #48dbfb; /* Vibrant gradient end */
+             --header-height: 90px; /* Approximate height of the header */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--background-color) 0%, #c8e6c9 100%); /* Subtle body gradient */
+            margin: 0;
+            padding: 0 0 70px;
+            overflow-x: hidden;
+            background-attachment: fixed; /* Keep gradient fixed during scroll */
+            animation: backgroundAnimation 15s ease infinite alternate; /* Subtle background animation */
+        }
+
+        @keyframes backgroundAnimation {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+
+        h2, h3 {
+            color: var(--text-color);
+            margin: 25px 0 20px;
+            animation: fadeIn 1s ease, slideInFromLeft 0.5s ease-out;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 25px 0;
+        }
+
+        .header {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            animation: slideDown 0.8s ease-out;
+            transition: top 0.3s ease-in-out; /* Animation for hiding/showing */
+             height: var(--header-height); /* Set a fixed height */
+             box-sizing: border-box; /* Include padding in height */
+        }
+
+         .header.header-hidden {
+             top: calc(-1 * var(--header-height)); /* Hide the header by moving it up */
+         }
+
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.4rem;
+            animation: fadeIn 1s ease;
+        }
+
+        .header .logo img {
+            height: 60px;
+            margin-right: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            animation: rotateIn 1s ease;
+        }
+
+        .navbar {
+            display: flex;
+            gap: 15px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.3s ease; /* Smoother transition */
+            animation: fadeIn 1s ease, slideInFromRight 0.5s ease-out;
+        }
+
+        .navbar a:hover {
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); /* More pronounced shadow */
+            transform: translateY(-3px); /* More pronounced hover */
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+            background: #f8f8f8; /* Keep a neutral background for product cards */
+            animation: fadeIn 1s ease;
+        }
+
+        .product {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.4s ease, box-shadow 0.4s ease; /* Smoother transition */
+            position: relative;
+            opacity: 0; /* Start hidden for scroll animation */
+            transform: translateY(30px); /* Start lower for scroll animation */
+        }
+
+        .product.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out; /* Slower reveal */
+        }
+
+
+        .product:hover {
+            transform: translateY(-10px); /* More pronounced hover */
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2); /* More pronounced shadow */
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: transform 0.4s ease; /* Smoother transition */
+        }
+
+        .product img:hover {
+            transform: scale(1.15); /* More pronounced scale */
+        }
+
+        .product h3 {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+             animation: none; /* Let parent handle scroll animation */
+        }
+
+        .productPrice {
+            color: var(--green-price);
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            animation: none; /* Let parent handle scroll animation */
+            transition: color 0.3s ease;
+        }
+
+        .weightSelect {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smoother transition */
+            animation: none; /* Let parent handle scroll animation */
+            cursor: pointer;
+        }
+
+        .weightSelect:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.5); /* More pronounced shadow */
+            background-color: #fff9e6; /* Lighter focus background */
+        }
+
+        .cart-btn {
+            background: linear-gradient(45deg, #ff6f61, #ff416c); /* Gradient for button */
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, background 0.5s ease; /* Added background transition */
+            animation: pulse 2s infinite;
+            position: relative;
+            overflow: hidden;
+            z-index: 1; /* Ensure ripple is above background */
+        }
+
+        .cart-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #fff, rgba(255, 255, 255, 0.3), #fff); /* Shine effect */
+            transition: left 0.7s ease;
+            z-index: -1;
+        }
+
+        .cart-btn:hover::before {
+            left: 100%;
+        }
+
+        .cart-btn:hover {
+            background: linear-gradient(45deg, #ff416c, #ff6f61); /* Reverse gradient on hover */
+            transform: scale(1.08); /* More pronounced scale */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* More pronounced shadow */
+        }
+
+        .cart-btn:active {
+             transform: scale(1);
+        }
+
+        /* Ripple effect for add to cart button */
+        .cart-btn .ripple {
+          position: absolute;
+          background-color: rgba(255, 255, 255, 0.5); /* Slightly less opaque ripple */
+          border-radius: 50%;
+          transform: scale(0);
+          animation: ripple 0.6s linear;
+          pointer-events: none; /* Don't interfere with button clicks */
+        }
+
+        @keyframes ripple {
+          to {
+            transform: scale(4);
+            opacity: 0;
+          }
+        }
+
+
+        .offer-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            animation: pulseBadge 1.5s infinite;
+            box-shadow: 0 0 12px rgba(255, 75, 43, 0.5);
+            z-index: 1;
+        }
+
+        @keyframes pulseBadge {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.8; } /* More pronounced pulse */
+        }
+
+        .hot-deal {
+            position: absolute;
+            top: 45px;
+            left: 10px;
+            background: #ffd700;
+            color: #222;
+            padding: 6px 14px;
+            font-size: 0.9rem;
+            border-radius: 30px;
+            font-weight: bold;
+            animation: bounceHot 1s infinite;
+            z-index: 1;
+        }
+
+        @keyframes bounceHot {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); } /* More pronounced bounce */
+        }
+
+        .limited-offer {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: linear-gradient(90deg, #8e2de2, #4a00e0); /* Gradient for limited offer */
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            border-radius: 15px;
+            box-shadow: 0 0 10px #8e2de2, 0 0 15px #4a00e0;
+            animation: glow 1.8s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 15px #8e2de2, 0 0 20px #4a00e0; } /* More pronounced glow */
+            50% { box-shadow: 0 0 30px #8e2de2, 0 0 45px #4a00e0; }
+        }
+
+        .payment-contact-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-top: 30px;
+            animation: fadeIn 1s ease;
+        }
+
+        .payment, .contact {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--card-background);
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+             opacity: 0; /* Start hidden for scroll animation */
+            transform: translateY(30px); /* Start lower for scroll animation */
+        }
+
+        .payment.is-visible, .contact.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out; /* Slower reveal */
+        }
+
+
+        .payment h3, .contact h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+             animation: none; /* Let parent handle scroll animation */
+        }
+
+        .payment label, .contact label { /* Added hover for contact labels */
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .payment label:hover, .contact label:hover { /* Added hover for contact labels */
+            color: var(--primary-color);
+        }
+
+
+        .payment input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+            transform: scale(1.2);
+            accent-color: var(--primary-color); /* Color the radio button */
+        }
+
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            animation: none; /* Let parent handle scroll animation */
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+            background-color: #fff9e6;
+        }
+
+         #google-pay-details {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 15px;
+            animation: fadeIn 0.6s ease-out;
+            text-align: center; /* Center QR code and details */
+        }
+
+        #google-pay-details p {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: #555;
+             text-align: left; /* Align text to the left within the centered div */
+        }
+
+         #google-pay-details label {
+             text-align: left; /* Align labels to the left */
+             width: 100%; /* Make label take full width for alignment */
+         }
+
+
+        #qrCodeImg {
+            max-width: 150px; /* Limit the size of the QR code */
+            height: auto;
+            margin: 15px auto; /* Center the image and add margin */
+            border: 1px solid #eee;
+            padding: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            animation: scaleIn 0.5s ease-out; /* Animation for the QR code */
+        }
+
+
+        .cart {
+            background-color: var(--card-background);
+            border: 1px solid #ddd;
+            padding: 25px;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0; /* Start hidden for scroll animation */
+            transform: translateY(30px); /* Start lower for scroll animation */
+        }
+         .cart.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out; /* Slower reveal */
+        }
+
+
+        .cart h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+             animation: none; /* Let parent handle scroll animation */
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .cart-item p {
+            font-size: 1.1rem;
+            color: #333;
+            margin: 0;
+             animation: none; /* Let parent handle scroll animation */
+        }
+
+        .cart-item button {
+            background-color: var(--red-remove);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Smoother transition */
+            font-size: 0.9rem;
+             animation: none; /* Let parent handle scroll animation */
+        }
+
+        .cart-item button:hover {
+            background-color: #c8124b;
+            transform: scale(1.15); /* More pronounced scale */
+        }
+
+        .cart-item button:active {
+             transform: scale(1);
+        }
+
+         #total-price {
+            transition: color 0.5s ease, transform 0.3s ease; /* Animation for total price */
+             display: inline-block; /* Needed for transform to work */
+         }
+         #total-price.updated {
+             color: var(--primary-color); /* Change color on update */
+             transform: scale(1.1); /* Slightly scale on update */
+         }
+
+
+        .whatsapp-btn {
+            background: linear-gradient(45deg, var(--accent-color), #81c784); /* Gradient for WhatsApp button */
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-top: 25px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, background 0.5s ease; /* Added background transition */
+            width: 100%;
+            text-align: center;
+            animation: pulse 2s infinite;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+         .whatsapp-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.5)); /* Shine effect */
+            transition: left 0.7s ease;
+            z-index: -1;
+        }
+
+        .whatsapp-btn:hover::before {
+            left: 100%;
+        }
+
+        .whatsapp-btn:hover {
+            background: linear-gradient(45deg, #81c784, var(--accent-color)); /* Reverse gradient on hover */
+            transform: scale(1.05);
+             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+         .whatsapp-btn:active {
+             transform: scale(1);
+        }
+
+        .whatsapp-btn i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+            animation: rotateIn 1s ease;
+        }
+
+        .footer {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            z-index: 99;
+            font-size: 0.9rem;
+            animation: fadeIn 1s ease, slideInFromBottom 0.5s ease-out;
+        }
+
+        /* Toast Notification */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 101; /* Higher z-index */
+            left: 50%;
+            bottom: 30px;
+            font-size: 1rem;
+            transform: translateX(-50%);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, bottom 0.5s ease-in-out;
+        }
+
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px; /* Slightly higher position when shown */
+        }
+
+        /* Custom Alert Modal */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 102; /* Higher than toast */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        .custom-modal-overlay.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .custom-modal-content {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transform: scale(0.8);
+            transition: transform 0.3s ease-in-out;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .custom-modal-overlay.visible .custom-modal-content {
+            transform: scale(1);
+        }
+
+        .custom-modal-content h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+         .custom-modal-content p {
+            margin-bottom: 20px;
+            color: var(--text-color);
+            font-size: 1.1rem;
+         }
+
+        .custom-modal-content button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .custom-modal-content button:hover {
+            background-color: #e05548;
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes slideInFromLeft {
+            0% { transform: translateX(-50px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+         @keyframes slideInFromRight {
+            0% { transform: translateX(50px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInFromBottom {
+            0% { transform: translateY(50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+
+        @keyframes scaleIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes rotateIn {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); } /* Slightly more pronounced pulse */
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Scroll Animation */
+        .scroll-animation {
+            opacity: 0;
+            transform: translateY(40px); /* Start further down */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Slower, smoother transition */
+        }
+
+        .scroll-animation.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+                 height: auto; /* Allow height to adjust */
+            }
+
+            .header .logo {
+                margin-bottom: 10px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .products {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-contact-wrapper {
+                flex-direction: column;
+            }
+
+            .payment, .contact {
+                min-width: 100%;
+            }
+
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .cart-item button, .whatsapp-btn {
+                width: 100%;
+                font-size: 1rem;
+            }
+             .custom-modal-content {
+                 padding: 20px; /* Adjusted padding */
+             }
+             #qrCodeImg {
+                 max-width: 120px; /* Smaller QR on smaller screens */
+             }
+             .header.header-hidden {
+                 top: -100%; /* Hide completely */
+             }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                font-size: 1.2rem;
+                padding: 10px 15px;
+            }
+
+            .header .logo img {
+                height: 45px;
+            }
+
+            .header .logo {
+                 font-size: 1.2rem;
+            }
+
+            .navbar a {
+                font-size: 1rem;
+            }
+
+
+            .product h3 {
+                font-size: 1.1rem;
+            }
+
+            .productPrice {
+                font-size: 1.2rem;
+            }
+
+             .container {
+                padding: 15px 0;
+            }
+             h2, h3 {
+                margin: 20px 0 15px;
+            }
+             .payment, .contact, .cart {
+                 padding: 15px;
+             }
+             input[type="text"] {
+                 padding: 10px;
+             }
+             .cart-btn {
+                 padding: 8px 15px;
+                 font-size: 1rem;
+             }
+             .whatsapp-btn {
+                 padding: 10px 20px;
+                 font-size: 1rem;
+             }
+              .custom-modal-content h4 {
+                font-size: 1.3rem;
+            }
+             .custom-modal-content p {
+                font-size: 1rem;
+             }
+             #qrCodeImg {
+                 max-width: 100px; /* Even smaller QR on very small screens */
+             }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <a href="#home"><img src="https://murugansuperstore.github.io/murugansuperstore.io/image/logo%20for%20MSS.jpg" alt="MMsuperstore Logo"></a>
+            MMsuperstore-Online
+        </div>
+        <nav class="navbar">
+            <a href="#home">Home</a>
+            <a href="#products">Products</a>
+            <a href="#contact">Contact</a>
+            <a href="#cart">Cart</a>
+        </nav>
+    </div>
+    <div class="container" id="home">
+        <h2 id="products">Our Fresh Products</h2>
+        <div class="products">
+            <div class="product scroll-animation">
+                <span class="offer-badge">50% Off</span>
+                <img src="https://via.placeholder.com/300/77B14B/FFFFFF?text=Apple" alt="Apple">
+                <h3 class="product-title">Apple</h3>
+                 <p class="productPrice">$10.00</p>
+                <p>Select Weight:</p>
+                <select class="weightSelect" onchange="updatePrice(this)">
+                    <option value="1" data-price="10">1kg - $10</option>
+                    <option value="2" data-price="20">2kg - $20</option>
+                    <option value="3" data-price="30">3kg - $30</option>
+                </select>
+                <button class="cart-btn" onclick="addToCart(this)">Add to Cart</button>
+            </div>
+            <div class="product scroll-animation">
+                <span class="hot-deal">Hot</span>
+                <img src="https://via.placeholder.com/300/F08080/FFFFFF?text=Banana" alt="Banana">
+                <h3 class="product-title">Banana</h3>
+                <p class="productPrice">$8.00</p>
+                <p>Select Weight:</p>
+                <select class="weightSelect" onchange="updatePrice(this)">
+                    <option value="1" data-price="8">1 Dozen - $8</option>
+                    <option value="2" data-price="15">2 Dozen - $15</option>
+                </select>
+                <button class="cart-btn" onclick="addToCart(this)">Add to Cart</button>
+            </div>
+            <div class="product scroll-animation">
+                <img src="https://via.placeholder.com/300/ADD8E6/FFFFFF?text=Milk" alt="Milk">
+                <h3 class="product-title">Milk</h3>
+                <p class="productPrice">$5.00</p>
+                <p>Select Quantity:</p>
+                <select class="weightSelect" onchange="updatePrice(this)">
+                    <option value="1" data-price="5">1 Liter - $5</option>
+                    <option value="2" data-price="9">2 Liter - $9</option>
+                    <option value="3" data-price="13">3 Liter - $13</option>
+                </select>
+                <button class="cart-btn" onclick="addToCart(this)">Add to Cart</button>
+            </div>
+            <div class="product scroll-animation">
+                <span class="limited-offer">Limited</span>
+                <img src="https://via.placeholder.com/300/FFA07A/FFFFFF?text=Bread" alt="Bread">
+                <h3 class="product-title">Bread</h3>
+                <p class="productPrice">$3.00</p>
+                <p>Select Type:</p>
+                <select class="weightSelect" onchange="updatePrice(this)">
+                    <option value="1" data-price="3">White - $3</option>
+                    <option value="2" data-price="4">Brown - $4</option>
+                </select>
+                <button class="cart-btn" onclick="addToCart(this)">Add to Cart</button>
+            </div>
+        </div>
+        <div class="payment-contact-wrapper" id="contact">
+            <div class="payment scroll-animation">
+                <h3>Payment Options</h3>
+                <label><input type="radio" name="payment-method" value="cash" checked onchange="togglePaymentFields()"> Cash on Delivery</label><br>
+                <label><input type="radio" name="payment-method" value="google-pay" onchange="togglePaymentFields()"> Google Pay</label><br>
+                <label><input type="radio" name="payment-method" value="phonepe" onchange="togglePaymentFields()"> PhonePe</label><br>
+                <div id="google-pay-details" style="display:none; margin-top: 20px;">
+                    <p><strong>Scan to Pay:</strong></p>
+                    <img id="qrCodeImg" src="https://via.placeholder.com/150/27ae60/FFFFFF?text=QR+Code" alt="Payment QR Code">
+                    <p><strong>Or use UPI ID:</strong> your_upi_id@example</p>
+                    <label for="google-pay-name">Your Name:</label>
+                    <input type="text" id="google-pay-name" placeholder="Enter your name">
+                    <label for="transaction-id">Transaction ID:</label>
+                    <input type="text" id="transaction-id" placeholder="Enter transaction ID">
+                </div>
+            </div>
+            <div class="contact scroll-animation">
+                <h3>Contact Information</h3>
+                <label for="contact-name">Your Name:</label>
+                <input type="text" id="contact-name" placeholder="Enter your name">
+                <label for="address">Delivery Address:</label>
+                <input type="text" id="address" placeholder="Enter your full delivery address">
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" placeholder="Enter your 10-digit phone number">
+            </div>
+        </div>
+        <div class="cart scroll-animation" id="cart">
+            <h3>Your Cart</h3>
+            <div id="cart-items">
+                <div class="cart-empty">Your cart is empty.</div>
+            </div>
+            <p><strong>Total: $<span id="total-price">0.00</span></strong></p>
+            <button class="whatsapp-btn" onclick="sendOrderToServer()">
+                <i class="fab fa-whatsapp"></i> Place Order
+            </button>
+        </div>
+    </div>
+    <div class="footer">
+        BrightMart © 2024 | Fast, Fresh, Delivered!
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <div id="customAlertModal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
+            <h4 id="customAlertTitle"></h4>
+            <p id="customAlertMessage"></p>
+            <button onclick="hideCustomAlert()">OK</button>
+        </div>
+    </div>
+
+
+    <script>
+    let cart = [];
+    const totalPriceSpan = document.getElementById('total-price');
+    let lastScrollTop = 0;
+    const header = document.querySelector('.header');
+    let headerHeight; // Declare but don't initialize immediately
+
+    // *** IMPORTANT: Replace this with your copied Google Apps Script Web App URL ***
+    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKnkUegFgfdlGV-bxOcpc4R3ViqMEctFK3hy4dE6Is9lyhLXZvTxZzSXR-o9WD4IuR/exec';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        headerHeight = header.offsetHeight; // Get header height dynamically on DOM load
+        loadCartFromLocalStorage();
+        updateCartUI();
+        addScrollAnimation();
+        addRippleEffectToCartButtons();
+        addSmoothScrolling();
+        togglePaymentFields();
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('resize', () => {
+             headerHeight = header.offsetHeight; // Re-adjust header height on resize
+        });
+    });
+
+    function handleScroll() {
+        const currentScrollTop = window.scrollY || document.documentElement.scrollTop;
+
+        if (currentScrollTop > lastScrollTop && currentScrollTop > headerHeight) {
+            header.classList.add('header-hidden');
+        } else {
+            header.classList.remove('header-hidden');
+        }
+
+        lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+    }
+
+    function showCustomAlert(title, message) {
+        const modalOverlay = document.getElementById('customAlertModal');
+        const modalTitle = document.getElementById('customAlertTitle');
+        const modalMessage = document.getElementById('customAlertMessage');
+
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        modalOverlay.classList.add('visible');
+    }
+
+    function hideCustomAlert() {
+        const modalOverlay = document.getElementById('customAlertModal');
+        modalOverlay.classList.remove('visible');
+    }
+
+    function updatePrice(selectElement) {
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        const price = parseFloat(selectedOption.getAttribute('data-price'));
+        const productContainer = selectElement.closest('.product');
+        const priceSpan = productContainer.querySelector('.productPrice');
+        priceSpan.textContent = `$${price.toFixed(2)}`;
+    }
+
+    function addToCart(button) {
+        const productContainer = button.closest('.product');
+        const productName = productContainer.querySelector('.product-title').textContent;
+        const weightSelect = productContainer.querySelector('.weightSelect');
+        const selectedOption = weightSelect.options[weightSelect.selectedIndex];
+        const weight = selectedOption.textContent;
+        const price = parseFloat(selectedOption.getAttribute('data-price'));
+
+        if (isNaN(price) || price <= 0) {
+            showCustomAlert("Error", "Invalid product price.");
+            return;
+        }
+
+        const item = {
+            name: productName,
+            weight: weight,
+            price: price
+        };
+        cart.push(item);
+        updateCartUI();
+        saveCartToLocalStorage();
+        showToast(`${productName} added to cart!`);
+    }
+
+    function updateCartUI() {
+        const cartItemsDiv = document.getElementById('cart-items');
+        cartItemsDiv.innerHTML = '';
+        let total = 0;
+
+        if (cart.length === 0) {
+            const emptyMessage = document.createElement('div');
+            emptyMessage.className = 'cart-empty';
+            emptyMessage.textContent = 'Your cart is empty.';
+            cartItemsDiv.appendChild(emptyMessage);
+        } else {
+            cart.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <p>${item.name} (${item.weight}) - $${item.price.toFixed(2)}</p>
+                    <button onclick="removeFromCart(${index})">Remove</button>
+                `;
+                cartItemsDiv.appendChild(div);
+                total += item.price;
+            });
+        }
+        animateTotalPrice(total);
+    }
+
+    function animateTotalPrice(newTotal) {
+        const currentTotal = parseFloat(totalPriceSpan.textContent);
+        const difference = newTotal - currentTotal;
+        const duration = 500;
+        const start = performance.now();
+
+        if (difference !== 0) {
+            function animate(currentTime) {
+                const elapsed = currentTime - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const animatedValue = currentTotal + difference * progress;
+                totalPriceSpan.textContent = animatedValue.toFixed(2);
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    totalPriceSpan.textContent = newTotal.toFixed(2);
+                    totalPriceSpan.classList.add('updated');
+                    setTimeout(() => {
+                        totalPriceSpan.classList.remove('updated');
+                    }, 1000);
+                }
+            }
+            requestAnimationFrame(animate);
+        } else {
+            totalPriceSpan.textContent = newTotal.toFixed(2);
+        }
+    }
+
+    function removeFromCart(index) {
+        if (index > -1 && index < cart.length) {
+            const removedItem = cart.splice(index, 1)[0];
+            updateCartUI();
+            saveCartToLocalStorage();
+            showToast(`${removedItem.name} removed from cart!`);
+        }
+    }
+
+    function togglePaymentFields() {
+        const method = document.querySelector('input[name="payment-method"]:checked').value;
+        const gpayDetails = document.getElementById("google-pay-details");
+        if (method === "google-pay" || method === "phonepe") {
+            gpayDetails.style.display = "block";
+        } else {
+            gpayDetails.style.display = "none";
+        }
+    }
+
+    // --- MODIFIED FUNCTION TO SEND ORDER TO GOOGLE SHEETS AND WHATSAPP ---
+    async function sendOrderToServer() {
+        if (cart.length === 0) {
+            showCustomAlert("Cart Empty", "Your cart is empty. Please add items before placing an order.");
+            return;
+        }
+        let total = cart.reduce((sum, item) => sum + item.price, 0);
+        // Minimum order amount validation (assuming $50)
+        if (total < 50) {
+            showCustomAlert("Minimum Order", "Minimum order amount should be $50 or more.");
+            return;
+        }
+
+        const method = document.querySelector('input[name="payment-method"]:checked').value;
+        const contactName = document.getElementById("contact-name").value.trim();
+        const address = document.getElementById("address").value.trim();
+        const phoneNumber = document.getElementById("phone").value.trim();
+
+        if (!contactName || !address || !phoneNumber) {
+            showCustomAlert("Missing Information", "Please fill out your name, address, and phone number before placing the order.");
+            return;
+        }
+
+        let googlePayName = '';
+        let transactionId = '';
+        if (method === "google-pay" || method === "phonepe") {
+            googlePayName = document.getElementById("google-pay-name").value.trim();
+            transactionId = document.getElementById("transaction-id").value.trim();
+            if (!googlePayName || !transactionId) {
+                showCustomAlert("Payment Details Missing", "Please fill in your name and transaction ID for online payment.");
+                return;
+            }
+        }
+
+        const orderData = {
+            contactName: contactName,
+            address: address,
+            phoneNumber: phoneNumber,
+            paymentMethod: method,
+            googlePayName: googlePayName,
+            transactionId: transactionId,
+            items: cart, // Sending the entire cart array
+            totalPrice: total
+        };
+
+        try {
+            // Send data to Google Apps Script Web App
+            const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                // Important: for Apps Script, send as application/x-www-form-urlencoded
+                // or just send as JSON and let script parse e.postData.contents
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8', // Apps Script expects this for JSON postData.contents
+                },
+                body: JSON.stringify(orderData),
+            });
+
+            const result = await response.json(); // Apps Script returns JSON
+
+            if (result.success) {
+                showToast("Order placed successfully!");
+
+                // --- WHATSAPP INTEGRATION ---
+                const whatsappPhoneNumber = "+919047878046"; // Replace with your actual WhatsApp business number
+                let whatsappMessage = `*New Order from MMsuperstore-Online*\n\n`;
+                whatsappMessage += `*Order ID:* ${result.orderId || 'N/A'}\n\n`; // Use orderId from Apps Script response if available
+                whatsappMessage += `*Customer Details:*\n`;
+                whatsappMessage += `Name: ${contactName}\n`;
+                whatsappMessage += `Phone: ${phoneNumber}\n`;
+                whatsappMessage += `Address: ${address}\n\n`;
+
+                whatsappMessage += `*Order Items:*\n`;
+                cart.forEach((item, index) => {
+                    whatsappMessage += `${index + 1}. ${item.name} (${item.weight}) - ₹${item.price.toFixed(2)}\n`;
+                });
+                whatsappMessage += `\n*Total Price:* ₹${total.toFixed(2)}\n\n`; // Use ₹ for Indian Rupee symbol
+
+                whatsappMessage += `*Payment Method:* ${method}\n`;
+                if (method === "google-pay" || method === "phonepe") {
+                    whatsappMessage += `GPay/PhonePe Name: ${googlePayName}\n`;
+                    whatsappMessage += `Transaction ID: ${transactionId}\n`;
+                }
+
+                whatsappMessage += `\nThank you for your order!`;
+
+                const encodedMessage = encodeURIComponent(whatsappMessage);
+                const whatsappURL = `https://wa.me/${whatsappPhoneNumber}?text=${encodedMessage}`;
+
+                // Open WhatsApp in a new tab
+                window.open(whatsappURL, '_blank');
+                // --- END WHATSAPP INTEGRATION ---
+
+                // Clear cart and form after successful order submission
+                cart = [];
+                saveCartToLocalStorage();
+                updateCartUI();
+                document.getElementById("contact-name").value = "";
+                document.getElementById("address").value = "";
+                document.getElementById("phone").value = "";
+                document.getElementById("google-pay-name").value = "";
+                document.getElementById("transaction-id").value = "";
+                document.querySelector('input[value="cash"]').checked = true; // Reset payment to cash
+                togglePaymentFields(); // Hide payment details
+            } else {
+                showCustomAlert("Order Failed", `Could not place order: ${result.message || 'Error recording to Google Sheet'}`);
+                console.error('Apps Script error:', result.message);
+            }
+        } catch (error) {
+            console.error('Network error during order submission or Apps Script communication:', error);
+            showCustomAlert("Order Failed", "A network error occurred or there was an issue communicating with the order system. Please try again.");
+        }
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    function saveCartToLocalStorage() {
+        localStorage.setItem('mmssCart', JSON.stringify(cart));
+    }
+
+    function loadCartFromLocalStorage() {
+        const storedCart = localStorage.getItem('mmssCart');
+        if (storedCart) {
+            cart = JSON.parse(storedCart);
+        }
+    }
+
+    function addScrollAnimation() {
+        const elements = document.querySelectorAll('.scroll-animation');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        elements.forEach(element => {
+            observer.observe(element);
+        });
+    }
+
+    function addRippleEffectToCartButtons() {
+        const buttons = document.querySelectorAll('.cart-btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const x = e.clientX - e.target.getBoundingClientRect().left;
+                const y = e.clientY - e.target.getBoundingClientRect().top;
+
+                const ripple = document.createElement('span');
+                ripple.style.cssText = `--x: ${x}px; --y: ${y}px; top:${y}px; left:${x}px;`;
+                ripple.classList.add('ripple');
+
+                this.appendChild(ripple);
+
+                ripple.addEventListener('animationend', () => {
+                    ripple.remove();
+                });
+            });
+        });
+    }
+
+    function addSmoothScrolling() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - document.querySelector('.header').offsetHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    }
+
+    loadCartFromLocalStorage();
+</script>
+
+</body>
+</html>
