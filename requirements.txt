@@ -1,6 +1,0 @@
-Flask
-Flask-SQLAlchemy
-Flask-Cors
-Flask-SocketIO
-eventlet
-gunicorn
